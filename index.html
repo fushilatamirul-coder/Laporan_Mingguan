@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weekly Content Report Management System</title>
+    <title>Weekly Content Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
@@ -46,7 +46,6 @@
             min-height: 100vh;
         }
 
-        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -59,7 +58,6 @@
             border-radius: 10px;
         }
 
-        /* ===== GLASSMORPHISM ===== */
         .glass {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(12px);
@@ -72,7 +70,6 @@
             border-color: rgba(255, 255, 255, 0.06);
         }
 
-        /* ===== CARD ===== */
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -86,7 +83,6 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
         }
 
-        /* ===== BUTTON ===== */
         .btn-primary {
             background: var(--primary);
             color: #fff;
@@ -141,7 +137,7 @@
             color: #fff;
         }
 
-        /* ===== SIDEBAR ===== */
+        /* SIDEBAR */
         .sidebar {
             width: 260px;
             min-height: 100vh;
@@ -187,6 +183,7 @@
             transition: all var(--transition);
             font-weight: 500;
             margin-bottom: 0.25rem;
+            cursor: pointer;
         }
         .sidebar a:hover,
         .sidebar a.active {
@@ -206,7 +203,7 @@
             color: var(--accent);
         }
 
-        /* ===== MAIN ===== */
+        /* MAIN */
         .main {
             margin-left: 260px;
             padding: 1.5rem 2rem;
@@ -214,7 +211,6 @@
             transition: margin var(--transition);
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -240,7 +236,7 @@
             padding: 0.5rem;
         }
 
-        /* ===== TABLE ===== */
+        /* TABLE */
         .table-wrap {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -265,7 +261,6 @@
             border-color: rgba(255, 255, 255, 0.04);
         }
 
-        /* ===== BADGE ===== */
         .badge {
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
@@ -306,7 +301,7 @@
             color: #dbeafe;
         }
 
-        /* ===== FORM ===== */
+        /* FORM */
         input,
         select,
         textarea {
@@ -343,7 +338,7 @@
             color: var(--accent);
         }
 
-        /* ===== UPLOAD DROP ===== */
+        /* DROP ZONE */
         .drop-zone {
             border: 2px dashed var(--accent);
             border-radius: var(--radius);
@@ -363,7 +358,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ===== LIGHTBOX ===== */
+        /* LIGHTBOX */
         .lightbox {
             position: fixed;
             top: 0;
@@ -407,9 +402,9 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* ===== BRAINSTORM TABLE ===== */
+        /* BRAINSTORM CELL */
         .brain-cell {
-            min-width: 80px;
+            min-width: 70px;
             padding: 0.4rem 0.3rem;
             border: 1px solid #e5e7eb;
             border-radius: 4px;
@@ -426,7 +421,7 @@
             border-color: transparent;
         }
 
-        /* ===== TOAST ===== */
+        /* TOAST */
         .toast-container {
             position: fixed;
             bottom: 2rem;
@@ -469,23 +464,6 @@
             }
         }
 
-        /* ===== LOADING ===== */
-        .loader {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(33, 74, 50, 0.15);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ===== MISC ===== */
         .page {
             display: none;
             animation: fadeIn 0.4s ease;
@@ -529,7 +507,6 @@
             font-weight: 500;
         }
 
-        /* progress ring */
         .progress-ring {
             width: 80px;
             height: 80px;
@@ -560,7 +537,6 @@
             color: var(--accent);
         }
 
-        /* Responsive tweaks */
         @media (max-width: 640px) {
             .main {
                 padding: 0.75rem;
@@ -575,214 +551,276 @@
                 width: 280px;
             }
         }
+
+        /* Login page override */
+        #loginPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+        #loginPage .card {
+            max-width: 400px;
+            width: 100%;
+        }
+        #app {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <div class="logo">
-            <i class="fas fa-edit"></i>
-            <span>ContentReport</span>
+    <!-- ===== LOGIN PAGE ===== -->
+    <div id="loginPage">
+        <div class="card">
+            <h2 class="text-2xl font-bold mb-4" style="color:var(--primary);">
+                <i class="fas fa-edit text-accent"></i> Login
+            </h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label>Username</label>
+                    <input type="text" id="loginUser" value="Divisi Konten" />
+                </div>
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" value="anggiadmin" />
+                </div>
+                <div class="mb-3">
+                    <label>Role</label>
+                    <select id="loginRole">
+                        <option value="Admin">Admin</option>
+                        <option value="Content Creator">Content Creator</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary w-full justify-center">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <p class="text-xs text-brown mt-3">Username: Divisi Konten / Password: anggiadmin</p>
         </div>
-        <nav>
-            <a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="#" data-page="jobs"><i class="fas fa-clipboard-list"></i> Laporan Pekerjaan</a>
-            <a href="#" data-page="uploads"><i class="fas fa-images"></i> Bukti Pekerjaan</a>
-            <a href="#" data-page="brainstorm"><i class="fas fa-lightbulb"></i> Brainstorming</a>
-            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </nav>
-        <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.05);">
-            <button id="darkToggle" class="btn-outline" style="width:100%;justify-content:center;font-size:0.8rem;">
-                <i class="fas fa-moon"></i> <span id="darkLabel">Dark Mode</span>
-            </button>
-        </div>
-    </aside>
+    </div>
 
-    <!-- ===== MAIN ===== -->
-    <div class="main">
+    <!-- ===== APP ===== -->
+    <div id="app">
 
-        <!-- HAMBURGER -->
-        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
-            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-            <h1 class="text-2xl font-bold" style="color:var(--primary);" id="pageTitle">Dashboard</h1>
-            <span style="margin-left:auto;font-size:0.85rem;color:var(--brown);" id="userBadge">👤 Admin</span>
-        </div>
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="fas fa-edit"></i>
+                <span>ContentReport</span>
+            </div>
+            <nav>
+                <a class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+                <a data-page="jobs"><i class="fas fa-clipboard-list"></i> Laporan Pekerjaan</a>
+                <a data-page="uploads"><i class="fas fa-images"></i> Bukti Pekerjaan</a>
+                <a data-page="brainstorm"><i class="fas fa-lightbulb"></i> Brainstorming</a>
+                <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+            <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.05);">
+                <button id="darkToggle" class="btn-outline" style="width:100%;justify-content:center;font-size:0.8rem;">
+                    <i class="fas fa-moon"></i> <span id="darkLabel">Dark Mode</span>
+                </button>
+            </div>
+        </aside>
 
-        <!-- ============================================================ -->
-        <!-- PAGE: DASHBOARD -->
-        <!-- ============================================================ -->
-        <div class="page active" id="page-dashboard">
+        <!-- MAIN CONTENT -->
+        <div class="main">
 
-            <!-- Stat Widgets -->
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
-                <div class="stat-widget"><span class="label">Jobdesk Mingguan</span><div class="num" id="statWeekly">0</div></div>
-                <div class="stat-widget"><span class="label">Jobdesk Bulanan</span><div class="num" id="statMonthly">0</div></div>
-                <div class="stat-widget"><span class="label">Progress</span><div class="num" id="statProgress">0%</div></div>
-                <div class="stat-widget"><span class="label">Upload Foto</span><div class="num" id="statUploads">0</div></div>
-                <div class="stat-widget"><span class="label">Ide Konten</span><div class="num" id="statIdeas">0</div></div>
-                <div class="stat-widget"><span class="label">Selesai</span><div class="num" id="statDone">0</div></div>
-                <div class="stat-widget"><span class="label">Pending</span><div class="num" id="statPending">0</div></div>
+            <!-- HAMBURGER & TITLE -->
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+                <h1 class="text-2xl font-bold" style="color:var(--primary);" id="pageTitle">Dashboard</h1>
+                <span style="margin-left:auto;font-size:0.85rem;color:var(--brown);" id="userBadge">👤 Admin</span>
             </div>
 
-            <!-- Chart + Progress -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-                <div class="card lg:col-span-2">
-                    <h3 class="font-semibold mb-3"><i class="fas fa-chart-bar text-accent"></i> Statistik Pekerjaan</h3>
-                    <canvas id="dashboardChart" height="200"></canvas>
+            <!-- ========================================================= -->
+            <!-- PAGE: DASHBOARD -->
+            <!-- ========================================================= -->
+            <div class="page active" id="page-dashboard">
+
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+                    <div class="stat-widget"><span class="label">Jobdesk Mingguan</span><div class="num" id="statWeekly">0</div></div>
+                    <div class="stat-widget"><span class="label">Jobdesk Bulanan</span><div class="num" id="statMonthly">0</div></div>
+                    <div class="stat-widget"><span class="label">Progress</span><div class="num" id="statProgress">0%</div></div>
+                    <div class="stat-widget"><span class="label">Upload Foto</span><div class="num" id="statUploads">0</div></div>
+                    <div class="stat-widget"><span class="label">Ide Konten</span><div class="num" id="statIdeas">0</div></div>
+                    <div class="stat-widget"><span class="label">Selesai</span><div class="num" id="statDone">0</div></div>
+                    <div class="stat-widget"><span class="label">Pending</span><div class="num" id="statPending">0</div></div>
                 </div>
-                <div class="card flex flex-col items-center justify-center">
-                    <h3 class="font-semibold mb-2">Progress Bulanan</h3>
-                    <div class="progress-ring" id="ringProgress" style="--pct:0%;">
-                        <div class="inner" id="ringLabel">0%</div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="card lg:col-span-2">
+                        <h3 class="font-semibold mb-3"><i class="fas fa-chart-bar text-accent"></i> Statistik Pekerjaan</h3>
+                        <canvas id="dashboardChart" height="200"></canvas>
                     </div>
-                    <p class="text-sm text-brown mt-2">dari target bulan ini</p>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="card mb-4">
-                <h3 class="font-semibold mb-3"><i class="fas fa-clock text-accent"></i> Recent Activity</h3>
-                <div id="recentActivity" class="space-y-2 text-sm">
-                    <p class="text-brown">Belum ada aktivitas.</p>
-                </div>
-            </div>
-
-            <!-- Timeline -->
-            <div class="card">
-                <h3 class="font-semibold mb-3"><i class="fas fa-calendar-alt text-accent"></i> Aktivitas Mingguan</h3>
-                <div id="weeklyTimeline" class="flex flex-wrap gap-2">
-                    <span class="text-brown">Belum ada data.</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- PAGE: LAPORAN PEKERJAAN (JOBS) -->
-        <!-- ============================================================ -->
-        <div class="page" id="page-jobs">
-
-            <!-- Form -->
-            <div class="card mb-6" id="jobFormCard">
-                <h3 class="font-semibold mb-3"><i class="fas fa-plus-circle text-accent"></i> <span id="formTitle">Tambah Laporan</span></h3>
-                <form id="jobForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <input type="hidden" id="jobId" value="" />
-                    <div><label>Tanggal</label><input type="date" id="jTanggal" required /></div>
-                    <div><label>Nama Staff</label><input type="text" id="jStaff" placeholder="Nama" required /></div>
-                    <div><label>Divisi</label>
-                        <select id="jDivisi"><option value="Konten">Konten</option><option value="Desain">Desain</option><option value="Video">Video</option><option value="Lainnya">Lainnya</option></select>
+                    <div class="card flex flex-col items-center justify-center">
+                        <h3 class="font-semibold mb-2">Progress Bulanan</h3>
+                        <div class="progress-ring" id="ringProgress" style="--pct:0%;">
+                            <div class="inner" id="ringLabel">0%</div>
+                        </div>
+                        <p class="text-sm text-brown mt-2">dari target bulan ini</p>
                     </div>
-                    <div><label>Kategori</label>
-                        <select id="jKategori"><option value="Feed Instagram">Feed Instagram</option><option value="Reels">Reels</option><option value="TikTok">TikTok</option><option value="YouTube Shorts">YouTube Shorts</option><option value="Threads">Threads</option><option value="Facebook">Facebook</option></select>
+                </div>
+
+                <div class="card mb-4">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-clock text-accent"></i> Recent Activity</h3>
+                    <div id="recentActivity" class="space-y-2 text-sm">
+                        <p class="text-brown">Belum ada aktivitas.</p>
                     </div>
-                    <div><label>Judul Pekerjaan</label><input type="text" id="jJudul" placeholder="Judul" required /></div>
-                    <div><label>Deskripsi</label><textarea id="jDeskripsi" rows="2" placeholder="Deskripsi"></textarea></div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-calendar-alt text-accent"></i> Aktivitas Mingguan</h3>
+                    <div id="weeklyTimeline" class="flex flex-wrap gap-2">
+                        <span class="text-brown">Belum ada data.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- PAGE: LAPORAN PEKERJAAN -->
+            <!-- ========================================================= -->
+            <div class="page" id="page-jobs">
+
+                <div class="card mb-6" id="jobFormCard">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-plus-circle text-accent"></i> <span id="formTitle">Tambah Laporan</span></h3>
+                    <form id="jobForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <input type="hidden" id="jobId" value="" />
+                        <div><label>Tanggal</label><input type="date" id="jTanggal" required /></div>
+                        <div><label>Nama Staff</label><input type="text" id="jStaff" placeholder="Nama" required /></div>
+                        <div><label>Divisi</label>
+                            <select id="jDivisi">
+                                <option value="Konten">Konten</option>
+                                <option value="Desain">Desain</option>
+                                <option value="Video">Video</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div><label>Kategori</label>
+                            <select id="jKategori">
+                                <option value="Feed Instagram">Feed Instagram</option>
+                                <option value="Reels">Reels</option>
+                                <option value="TikTok">TikTok</option>
+                                <option value="YouTube Shorts">YouTube Shorts</option>
+                                <option value="Threads">Threads</option>
+                                <option value="Facebook">Facebook</option>
+                            </select>
+                        </div>
+                        <div><label>Judul Pekerjaan</label><input type="text" id="jJudul" placeholder="Judul" required /></div>
+                        <div><label>Deskripsi</label><textarea id="jDeskripsi" rows="2" placeholder="Deskripsi"></textarea></div>
+                        <div><label>Status</label>
+                            <select id="jStatus">
+                                <option value="Selesai">Selesai</option>
+                                <option value="Proses" selected>Proses</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div><label>Deadline</label><input type="date" id="jDeadline" /></div>
+                        <div><label>Prioritas</label>
+                            <select id="jPrioritas">
+                                <option value="Rendah">Rendah</option>
+                                <option value="Sedang" selected>Sedang</option>
+                                <option value="Tinggi">Tinggi</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <label class="flex items-center gap-1"><input type="checkbox" id="jChecklist" /> Checklist Selesai</label>
+                        </div>
+                        <div class="md:col-span-2 lg:col-span-3 flex gap-2 flex-wrap">
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span id="submitBtnText">Simpan</span></button>
+                            <button type="reset" class="btn-outline" id="resetJobBtn"><i class="fas fa-undo"></i> Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="flex flex-wrap gap-3 mb-4 items-end">
+                    <div><label>Search</label><input type="text" id="jobSearch" placeholder="Cari..." class="w-40" /></div>
+                    <div><label>Filter Tanggal</label><input type="date" id="filterDate" class="w-36" /></div>
                     <div><label>Status</label>
-                        <select id="jStatus"><option value="Selesai">Selesai</option><option value="Proses" selected>Proses</option><option value="Pending">Pending</option></select>
+                        <select id="filterStatus" class="w-32"><option value="">Semua</option><option value="Selesai">Selesai</option><option value="Proses">Proses</option><option value="Pending">Pending</option></select>
                     </div>
-                    <div><label>Deadline</label><input type="date" id="jDeadline" /></div>
-                    <div><label>Prioritas</label>
-                        <select id="jPrioritas"><option value="Rendah">Rendah</option><option value="Sedang" selected>Sedang</option><option value="Tinggi">Tinggi</option></select>
+                    <div><label>Divisi</label>
+                        <select id="filterDivisi" class="w-32"><option value="">Semua</option><option value="Konten">Konten</option><option value="Desain">Desain</option><option value="Video">Video</option><option value="Lainnya">Lainnya</option></select>
                     </div>
-                    <div class="flex items-end gap-2">
-                        <label class="flex items-center gap-1"><input type="checkbox" id="jChecklist" /> Checklist Selesai</label>
+                    <div><button id="clearFilters" class="btn-outline text-sm"><i class="fas fa-times"></i> Reset Filter</button></div>
+                    <div style="margin-left:auto;">
+                        <button id="exportPdfJobs" class="btn-accent text-sm"><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button id="exportExcelJobs" class="btn-accent text-sm"><i class="fas fa-file-excel"></i> Excel</button>
+                        <button id="printJobs" class="btn-accent text-sm"><i class="fas fa-print"></i> Print</button>
                     </div>
-                    <div class="md:col-span-2 lg:col-span-3 flex gap-2 flex-wrap">
-                        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span id="submitBtnText">Simpan</span></button>
-                        <button type="reset" class="btn-outline" id="resetJobBtn"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+
+                <div class="card table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Tanggal</th><th>Staff</th><th>Divisi</th><th>Kategori</th><th>Judul</th><th>Status</th><th>Deadline</th><th>Prioritas</th><th>Progress</th><th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            <tr><td colspan="11" class="text-center text-brown">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="flex justify-between items-center mt-3 text-sm">
+                        <span id="jobCount">0 data</span>
+                        <div class="flex gap-2">
+                            <button id="prevPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageInfoJobs" class="px-2">Halaman 1</span>
+                            <button id="nextPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
 
-            <!-- Filter & Search -->
-            <div class="flex flex-wrap gap-3 mb-4 items-end">
-                <div><label>Search</label><input type="text" id="jobSearch" placeholder="Cari..." class="w-40" /></div>
-                <div><label>Filter Tanggal</label><input type="date" id="filterDate" class="w-36" /></div>
-                <div><label>Status</label>
-                    <select id="filterStatus" class="w-32"><option value="">Semua</option><option value="Selesai">Selesai</option><option value="Proses">Proses</option><option value="Pending">Pending</option></select>
+            <!-- ========================================================= -->
+            <!-- PAGE: BUKTI PEKERJAAN (UPLOADS) -->
+            <!-- ========================================================= -->
+            <div class="page" id="page-uploads">
+
+                <div class="card mb-4">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-upload text-accent"></i> Upload Gambar</h3>
+                    <div class="drop-zone" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p class="font-medium">Drag & Drop gambar di sini, atau klik untuk memilih</p>
+                        <p class="text-sm text-brown">Multiple upload didukung</p>
+                        <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" />
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                        <div><label>Kategori</label><input type="text" id="uploadKategori" placeholder="Kategori" /></div>
+                        <div><label>Tanggal</label><input type="date" id="uploadTanggal" /></div>
+                        <div><label>Deskripsi</label><input type="text" id="uploadDeskripsi" placeholder="Deskripsi" /></div>
+                    </div>
+                    <button id="uploadBtn" class="btn-primary mt-2"><i class="fas fa-upload"></i> Upload</button>
                 </div>
-                <div><label>Divisi</label>
-                    <select id="filterDivisi" class="w-32"><option value="">Semua</option><option value="Konten">Konten</option><option value="Desain">Desain</option><option value="Video">Video</option><option value="Lainnya">Lainnya</option></select>
-                </div>
-                <div><button id="clearFilters" class="btn-outline text-sm"><i class="fas fa-times"></i> Reset Filter</button></div>
-                <div style="margin-left:auto;">
-                    <button id="exportPdfJobs" class="btn-accent text-sm"><i class="fas fa-file-pdf"></i> PDF</button>
-                    <button id="exportExcelJobs" class="btn-accent text-sm"><i class="fas fa-file-excel"></i> Excel</button>
-                    <button id="printJobs" class="btn-accent text-sm"><i class="fas fa-print"></i> Print</button>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-images text-accent"></i> Galeri</h3>
+                    <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        <p class="col-span-full text-brown">Belum ada gambar.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="card table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th><th>Tanggal</th><th>Staff</th><th>Divisi</th><th>Kategori</th><th>Judul</th><th>Status</th><th>Deadline</th><th>Prioritas</th><th>Progress</th><th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="jobsTableBody">
-                        <tr><td colspan="11" class="text-center text-brown">Loading...</td></tr>
-                    </tbody>
-                </table>
-                <div class="flex justify-between items-center mt-3 text-sm">
-                    <span id="jobCount">0 data</span>
+            <!-- ========================================================= -->
+            <!-- PAGE: BRAINSTORMING -->
+            <!-- ========================================================= -->
+            <div class="page" id="page-brainstorm">
+
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <h3 class="font-semibold"><i class="fas fa-lightbulb text-accent"></i> Ide Konten Bulanan</h3>
                     <div class="flex gap-2">
-                        <button id="prevPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-left"></i></button>
-                        <span id="pageInfoJobs" class="px-2">Halaman 1</span>
-                        <button id="nextPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-right"></i></button>
+                        <button id="saveBrainstorm" class="btn-primary text-sm"><i class="fas fa-save"></i> Simpan Semua</button>
+                        <button id="resetBrainstorm" class="btn-outline text-sm"><i class="fas fa-undo"></i> Reset</button>
                     </div>
                 </div>
+
+                <div id="brainstormContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- akan di-render JS -->
+                </div>
             </div>
+
         </div>
-
-        <!-- ============================================================ -->
-        <!-- PAGE: BUKTI PEKERJAAN (UPLOADS) -->
-        <!-- ============================================================ -->
-        <div class="page" id="page-uploads">
-
-            <div class="card mb-4">
-                <h3 class="font-semibold mb-3"><i class="fas fa-upload text-accent"></i> Upload Gambar</h3>
-                <div class="drop-zone" id="dropZone">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p class="font-medium">Drag & Drop gambar di sini, atau klik untuk memilih</p>
-                    <p class="text-sm text-brown">Multiple upload didukung</p>
-                    <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" />
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                    <div><label>Kategori</label><input type="text" id="uploadKategori" placeholder="Kategori" /></div>
-                    <div><label>Tanggal</label><input type="date" id="uploadTanggal" /></div>
-                    <div><label>Deskripsi</label><input type="text" id="uploadDeskripsi" placeholder="Deskripsi" /></div>
-                </div>
-                <button id="uploadBtn" class="btn-primary mt-2"><i class="fas fa-upload"></i> Upload</button>
-            </div>
-
-            <!-- Gallery -->
-            <div class="card">
-                <h3 class="font-semibold mb-3"><i class="fas fa-images text-accent"></i> Galeri</h3>
-                <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    <p class="col-span-full text-brown">Belum ada gambar.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- PAGE: BRAINSTORMING -->
-        <!-- ============================================================ -->
-        <div class="page" id="page-brainstorm">
-
-            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h3 class="font-semibold"><i class="fas fa-lightbulb text-accent"></i> Ide Konten Bulanan</h3>
-                <div class="flex gap-2">
-                    <button id="saveBrainstorm" class="btn-primary text-sm"><i class="fas fa-save"></i> Simpan Semua</button>
-                    <button id="resetBrainstorm" class="btn-outline text-sm"><i class="fas fa-undo"></i> Reset</button>
-                </div>
-            </div>
-
-            <div id="brainstormContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <!-- 4 minggu akan di-render oleh JS -->
-            </div>
-        </div>
-
     </div>
 
     <!-- ===== LIGHTBOX ===== -->
@@ -794,22 +832,22 @@
     <!-- ===== TOAST CONTAINER ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- ============================================================ -->
+    <!-- ================================================================ -->
     <!-- JAVASCRIPT -->
-    <!-- ============================================================ -->
+    <!-- ================================================================ -->
     <script>
         // ================================================================
         //  GLOBALS
         // ================================================================
-        const API_BASE = '/api';
         let currentUser = null;
         let currentPage = 'dashboard';
-        let jobsData = [];
-        let uploadsData = [];
-        let brainstormData = {};
         let chartInstance = null;
         let jobPage = 1;
         const JOB_LIMIT = 10;
+        const STORAGE_JOBS = 'wcr_jobs';
+        const STORAGE_UPLOADS = 'wcr_uploads';
+        const STORAGE_BRAIN = 'wcr_brain';
+        const STORAGE_USER = 'wcr_user';
 
         // ================================================================
         //  TOAST
@@ -825,54 +863,46 @@
         }
 
         // ================================================================
-        //  LOADING
+        //  LOCAL STORAGE HELPERS
         // ================================================================
-        function showLoading(show) {
-            // simple spinner overlay
-        }
+        function getJobs() { return JSON.parse(localStorage.getItem(STORAGE_JOBS) || '[]'); }
+
+        function setJobs(j) { localStorage.setItem(STORAGE_JOBS, JSON.stringify(j)); }
+
+        function getUploads() { return JSON.parse(localStorage.getItem(STORAGE_UPLOADS) || '[]'); }
+
+        function setUploads(u) { localStorage.setItem(STORAGE_UPLOADS, JSON.stringify(u)); }
+
+        function getBrain() { return JSON.parse(localStorage.getItem(STORAGE_BRAIN) || '{}'); }
+
+        function setBrain(b) { localStorage.setItem(STORAGE_BRAIN, JSON.stringify(b)); }
 
         // ================================================================
         //  AUTH
         // ================================================================
         function checkAuth() {
-            const u = localStorage.getItem('wcr_user');
-            if (!u) {
-                // redirect ke login
-                document.body.innerHTML = `
-                    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);">
-                        <div class="card" style="max-width:400px;width:100%;">
-                            <h2 class="text-2xl font-bold mb-4" style="color:var(--primary);"><i class="fas fa-edit text-accent"></i> Login</h2>
-                            <form id="loginForm">
-                                <div class="mb-3"><label>Username</label><input type="text" id="loginUser" value="admin" /></div>
-                                <div class="mb-3"><label>Password</label><input type="password" id="loginPass" value="admin123" /></div>
-                                <div class="mb-3"><label>Role</label>
-                                    <select id="loginRole"><option value="Admin">Admin</option><option value="Content Creator">Content Creator</option></select>
-                                </div>
-                                <button type="submit" class="btn-primary w-full justify-center"><i class="fas fa-sign-in-alt"></i> Login</button>
-                            </form>
-                            <p class="text-xs text-brown mt-3">Default: admin/admin123</p>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('loginForm').addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const username = document.getElementById('loginUser').value;
-                    const password = document.getElementById('loginPass').value;
-                    const role = document.getElementById('loginRole').value;
-                    // Simulate login
-                    const user = { username, role };
-                    localStorage.setItem('wcr_user', JSON.stringify(user));
-                    currentUser = user;
-                    document.getElementById('userBadge').textContent = `👤 ${user.username} (${user.role})`;
-                    showToast('Login berhasil!', 'success');
-                    // reload page
-                    location.reload();
-                });
-                return false;
+            const raw = localStorage.getItem(STORAGE_USER);
+            if (!raw) return false;
+            try {
+                currentUser = JSON.parse(raw);
+                document.getElementById('userBadge').textContent = `👤 ${currentUser.username} (${currentUser.role})`;
+                return true;
+            } catch { return false; }
+        }
+
+        function doLogin(username, password, role) {
+            if (username === 'Divisi Konten' && password === 'anggiadmin') {
+                const user = { username, role };
+                localStorage.setItem(STORAGE_USER, JSON.stringify(user));
+                currentUser = user;
+                return true;
             }
-            currentUser = JSON.parse(u);
-            document.getElementById('userBadge').textContent = `👤 ${currentUser.username} (${currentUser.role})`;
-            return true;
+            return false;
+        }
+
+        function doLogout() {
+            localStorage.removeItem(STORAGE_USER);
+            location.reload();
         }
 
         // ================================================================
@@ -880,9 +910,11 @@
         // ================================================================
         function navigate(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${page}`).classList.add('active');
-            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-            document.querySelector(`.sidebar a[data-page="${page}"]`)?.classList.add('active');
+            const el = document.getElementById(`page-${page}`);
+            if (el) el.classList.add('active');
+            document.querySelectorAll('.sidebar a[data-page]').forEach(a => a.classList.remove('active'));
+            const link = document.querySelector(`.sidebar a[data-page="${page}"]`);
+            if (link) link.classList.add('active');
             currentPage = page;
             const titles = { dashboard: 'Dashboard', jobs: 'Laporan Pekerjaan', uploads: 'Bukti Pekerjaan',
                 brainstorm: 'Brainstorming' };
@@ -897,147 +929,153 @@
         }
 
         // ================================================================
-        //  API HELPERS
-        // ================================================================
-        async function apiFetch(endpoint, opts = {}) {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
-                ...opts,
-                headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
-
-        // ================================================================
         //  DASHBOARD
         // ================================================================
-        async function loadDashboard() {
-            try {
-                const data = await apiFetch('/dashboard');
-                document.getElementById('statWeekly').textContent = data.weeklyJobs || 0;
-                document.getElementById('statMonthly').textContent = data.monthlyJobs || 0;
-                document.getElementById('statProgress').textContent = `${data.progress || 0}%`;
-                document.getElementById('statUploads').textContent = data.totalUploads || 0;
-                document.getElementById('statIdeas').textContent = data.totalIdeas || 0;
-                document.getElementById('statDone').textContent = data.doneJobs || 0;
-                document.getElementById('statPending').textContent = data.pendingJobs || 0;
+        function loadDashboard() {
+            const jobs = getJobs();
+            const uploads = getUploads();
+            const brain = getBrain();
 
-                // ring
-                const pct = Math.min(data.progress || 0, 100);
-                document.getElementById('ringProgress').style.setProperty('--pct', `${pct}%`);
-                document.getElementById('ringLabel').textContent = `${pct}%`;
+            const now = new Date();
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay() + 1);
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-                // chart
-                const ctx = document.getElementById('dashboardChart').getContext('2d');
-                if (chartInstance) chartInstance.destroy();
-                const labels = ['Feed IG', 'Reels', 'TikTok', 'YTS', 'Threads', 'FB'];
-                const values = [
-                    data.categories?.FeedInstagram || 0,
-                    data.categories?.Reels || 0,
-                    data.categories?.TikTok || 0,
-                    data.categories?.YouTubeShorts || 0,
-                    data.categories?.Threads || 0,
-                    data.categories?.Facebook || 0
-                ];
-                chartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels,
-                        datasets: [{
-                            label: 'Jumlah',
-                            data: values,
-                            backgroundColor: ['#214A32', '#7A5634', '#D9B574', '#4a7a5a', '#a07a5a', '#b89a6a'],
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
-                    }
-                });
+            const weekly = jobs.filter(j => new Date(j.tanggal) >= weekStart);
+            const monthly = jobs.filter(j => new Date(j.tanggal) >= monthStart);
+            const done = jobs.filter(j => j.status === 'Selesai');
+            const pending = jobs.filter(j => j.status === 'Pending');
 
-                // recent activity
-                const act = document.getElementById('recentActivity');
-                if (data.recent && data.recent.length) {
-                    act.innerHTML = data.recent.map(r =>
-                        `<div class="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800"><span>${r.msg}</span><span class="text-xs text-brown">${r.time}</span></div>`
-                    ).join('');
-                } else {
-                    act.innerHTML = '<p class="text-brown">Belum ada aktivitas.</p>';
-                }
-
-                // weekly timeline
-                const tl = document.getElementById('weeklyTimeline');
-                if (data.weeklyTimeline && data.weeklyTimeline.length) {
-                    tl.innerHTML = data.weeklyTimeline.map(w =>
-                        `<span class="badge badge-info">${w.day}: ${w.count} job</span>`
-                    ).join('');
-                } else {
-                    tl.innerHTML = '<span class="text-brown">Belum ada data.</span>';
-                }
-
-            } catch (e) {
-                console.error(e);
-                showToast('Gagal load dashboard', 'error');
+            document.getElementById('statWeekly').textContent = weekly.length;
+            document.getElementById('statMonthly').textContent = monthly.length;
+            document.getElementById('statUploads').textContent = uploads.length;
+            // total ide konten = jumlah baris brainstorming yang terisi
+            let ideaCount = 0;
+            for (let w = 1; w <= 4; w++) {
+                const wk = brain[`minggu${w}`] || [];
+                ideaCount += wk.filter(r => r && r.judul && r.judul.trim() !== '').length;
             }
+            document.getElementById('statIdeas').textContent = ideaCount;
+            document.getElementById('statDone').textContent = done.length;
+            document.getElementById('statPending').textContent = pending.length;
+
+            const progress = monthly.length ? Math.round((done.length / monthly.length) * 100) : 0;
+            document.getElementById('statProgress').textContent = `${progress}%`;
+            document.getElementById('ringProgress').style.setProperty('--pct', `${progress}%`);
+            document.getElementById('ringLabel').textContent = `${progress}%`;
+
+            // Chart
+            const categories = { 'Feed Instagram': 0, 'Reels': 0, 'TikTok': 0, 'YouTube Shorts': 0, 'Threads': 0,
+                'Facebook': 0 };
+            jobs.forEach(j => { if (categories.hasOwnProperty(j.kategori)) categories[j.kategori]++; });
+            const ctx = document.getElementById('dashboardChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        label: 'Jumlah',
+                        data: Object.values(categories),
+                        backgroundColor: ['#214A32', '#7A5634', '#D9B574', '#4a7a5a', '#a07a5a', '#b89a6a'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
+                }
+            });
+
+            // Recent activity
+            const recent = jobs.slice(-5).reverse();
+            const act = document.getElementById('recentActivity');
+            if (recent.length) {
+                act.innerHTML = recent.map(j =>
+                    `<div class="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800">
+                            <span>${j.judul} - ${j.status}</span>
+                            <span class="text-xs text-brown">${j.tanggal}</span>
+                        </div>`
+                ).join('');
+            } else {
+                act.innerHTML = '<p class="text-brown">Belum ada aktivitas.</p>';
+            }
+
+            // Weekly timeline
+            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            const tl = document.getElementById('weeklyTimeline');
+            const weekCount = days.map(d => {
+                const dNum = new Date(weekStart);
+                dNum.setDate(weekStart.getDate() + days.indexOf(d));
+                const dateStr = dNum.toISOString().slice(0, 10);
+                return { day: d, count: jobs.filter(j => j.tanggal === dateStr).length };
+            });
+            tl.innerHTML = weekCount.map(w =>
+                `<span class="badge badge-info">${w.day}: ${w.count} job</span>`
+            ).join('');
         }
 
         // ================================================================
         //  JOBS (CRUD)
         // ================================================================
-        async function loadJobs() {
-            try {
-                const search = document.getElementById('jobSearch').value;
-                const date = document.getElementById('filterDate').value;
-                const status = document.getElementById('filterStatus').value;
-                const divisi = document.getElementById('filterDivisi').value;
-                const q = new URLSearchParams({ page: jobPage, limit: JOB_LIMIT, search, date, status, divisi });
-                const res = await apiFetch(`/jobs?${q}`);
-                jobsData = res.data || [];
-                const total = res.total || 0;
-                document.getElementById('jobCount').textContent = `${total} data`;
-                document.getElementById('pageInfoJobs').textContent = `Halaman ${jobPage}`;
+        function loadJobs() {
+            const jobs = getJobs();
+            const search = document.getElementById('jobSearch').value.toLowerCase();
+            const date = document.getElementById('filterDate').value;
+            const status = document.getElementById('filterStatus').value;
+            const divisi = document.getElementById('filterDivisi').value;
 
-                const tbody = document.getElementById('jobsTableBody');
-                if (!jobsData.length) {
-                    tbody.innerHTML = `<tr><td colspan="11" class="text-center text-brown">Tidak ada data</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = jobsData.map((j, i) => `
-                        <tr>
-                            <td>${(jobPage-1)*JOB_LIMIT + i + 1}</td>
-                            <td>${j.tanggal}</td>
-                            <td>${j.nama_staff}</td>
-                            <td>${j.divisi}</td>
-                            <td>${j.kategori}</td>
-                            <td class="max-w-[120px] truncate" title="${j.judul}">${j.judul}</td>
-                            <td><span class="badge ${j.status === 'Selesai' ? 'badge-success' : j.status === 'Proses' ? 'badge-warning' : 'badge-danger'}">${j.status}</span></td>
-                            <td>${j.deadline || '-'}</td>
-                            <td><span class="badge ${j.prioritas === 'Tinggi' ? 'badge-danger' : j.prioritas === 'Sedang' ? 'badge-warning' : 'badge-info'}">${j.prioritas}</span></td>
-                            <td>${j.progress || 0}%</td>
-                            <td>
-                                <button class="text-primary editJob" data-id="${j.id}"><i class="fas fa-edit"></i></button>
-                                <button class="text-red-500 deleteJob" data-id="${j.id}"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `).join('');
+            let filtered = jobs.filter(j => {
+                let ok = true;
+                if (search && !j.judul.toLowerCase().includes(search) && !j.nama_staff.toLowerCase().includes(search))
+                    ok = false;
+                if (date && j.tanggal !== date) ok = false;
+                if (status && j.status !== status) ok = false;
+                if (divisi && j.divisi !== divisi) ok = false;
+                return ok;
+            });
 
-                // event listeners
-                document.querySelectorAll('.editJob').forEach(btn => {
-                    btn.addEventListener('click', () => editJob(btn.dataset.id));
-                });
-                document.querySelectorAll('.deleteJob').forEach(btn => {
-                    btn.addEventListener('click', () => deleteJob(btn.dataset.id));
-                });
+            const total = filtered.length;
+            const start = (jobPage - 1) * JOB_LIMIT;
+            const pageData = filtered.slice(start, start + JOB_LIMIT);
 
-            } catch (e) {
-                console.error(e);
-                showToast('Gagal load jobs', 'error');
+            document.getElementById('jobCount').textContent = `${total} data`;
+            document.getElementById('pageInfoJobs').textContent = `Halaman ${jobPage}`;
+
+            const tbody = document.getElementById('jobsTableBody');
+            if (!pageData.length) {
+                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-brown">Tidak ada data</td></tr>`;
+                return;
             }
+            tbody.innerHTML = pageData.map((j, i) => `
+                    <tr>
+                        <td>${start + i + 1}</td>
+                        <td>${j.tanggal}</td>
+                        <td>${j.nama_staff}</td>
+                        <td>${j.divisi}</td>
+                        <td>${j.kategori}</td>
+                        <td class="max-w-[120px] truncate" title="${j.judul}">${j.judul}</td>
+                        <td><span class="badge ${j.status === 'Selesai' ? 'badge-success' : j.status === 'Proses' ? 'badge-warning' : 'badge-danger'}">${j.status}</span></td>
+                        <td>${j.deadline || '-'}</td>
+                        <td><span class="badge ${j.prioritas === 'Tinggi' ? 'badge-danger' : j.prioritas === 'Sedang' ? 'badge-warning' : 'badge-info'}">${j.prioritas}</span></td>
+                        <td>${j.progress || 0}%</td>
+                        <td>
+                            <button class="text-primary editJob" data-id="${j.id}"><i class="fas fa-edit"></i></button>
+                            <button class="text-red-500 deleteJob" data-id="${j.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            document.querySelectorAll('.editJob').forEach(btn => {
+                btn.addEventListener('click', () => editJob(parseInt(btn.dataset.id)));
+            });
+            document.querySelectorAll('.deleteJob').forEach(btn => {
+                btn.addEventListener('click', () => deleteJob(parseInt(btn.dataset.id)));
+            });
         }
 
-        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+        document.getElementById('jobForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('jobId').value;
             const data = {
@@ -1050,25 +1088,29 @@
                 status: document.getElementById('jStatus').value,
                 deadline: document.getElementById('jDeadline').value,
                 prioritas: document.getElementById('jPrioritas').value,
-                checklist: document.getElementById('jChecklist').checked ? 1 : 0
+                checklist: document.getElementById('jChecklist').checked ? 1 : 0,
+                progress: document.getElementById('jStatus').value === 'Selesai' ? 100 : 50
             };
-            try {
-                if (id) {
-                    await apiFetch(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+
+            let jobs = getJobs();
+            if (id) {
+                const idx = jobs.findIndex(j => j.id === parseInt(id));
+                if (idx !== -1) {
+                    jobs[idx] = { ...jobs[idx], ...data };
                     showToast('Data diperbarui', 'success');
-                } else {
-                    await apiFetch('/jobs', { method: 'POST', body: JSON.stringify(data) });
-                    showToast('Data disimpan', 'success');
                 }
-                document.getElementById('jobForm').reset();
-                document.getElementById('jobId').value = '';
-                document.getElementById('submitBtnText').textContent = 'Simpan';
-                document.getElementById('formTitle').textContent = 'Tambah Laporan';
-                loadJobs();
-                loadDashboard();
-            } catch (e) {
-                showToast('Gagal simpan', 'error');
+            } else {
+                const newId = jobs.length ? Math.max(...jobs.map(j => j.id)) + 1 : 1;
+                jobs.push({ id: newId, ...data });
+                showToast('Data disimpan', 'success');
             }
+            setJobs(jobs);
+            document.getElementById('jobForm').reset();
+            document.getElementById('jobId').value = '';
+            document.getElementById('submitBtnText').textContent = 'Simpan';
+            document.getElementById('formTitle').textContent = 'Tambah Laporan';
+            loadJobs();
+            loadDashboard();
         });
 
         document.getElementById('resetJobBtn').addEventListener('click', () => {
@@ -1078,44 +1120,46 @@
             document.getElementById('jobForm').reset();
         });
 
-        async function editJob(id) {
-            try {
-                const res = await apiFetch(`/jobs/${id}`);
-                const j = res.data;
-                document.getElementById('jobId').value = j.id;
-                document.getElementById('jTanggal').value = j.tanggal;
-                document.getElementById('jStaff').value = j.nama_staff;
-                document.getElementById('jDivisi').value = j.divisi;
-                document.getElementById('jKategori').value = j.kategori;
-                document.getElementById('jJudul').value = j.judul;
-                document.getElementById('jDeskripsi').value = j.deskripsi || '';
-                document.getElementById('jStatus').value = j.status;
-                document.getElementById('jDeadline').value = j.deadline || '';
-                document.getElementById('jPrioritas').value = j.prioritas;
-                document.getElementById('jChecklist').checked = j.checklist == 1;
-                document.getElementById('submitBtnText').textContent = 'Update';
-                document.getElementById('formTitle').textContent = 'Edit Laporan';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } catch (e) {
-                showToast('Gagal ambil data', 'error');
-            }
+        function editJob(id) {
+            const jobs = getJobs();
+            const j = jobs.find(j => j.id === id);
+            if (!j) return;
+            document.getElementById('jobId').value = j.id;
+            document.getElementById('jTanggal').value = j.tanggal;
+            document.getElementById('jStaff').value = j.nama_staff;
+            document.getElementById('jDivisi').value = j.divisi;
+            document.getElementById('jKategori').value = j.kategori;
+            document.getElementById('jJudul').value = j.judul;
+            document.getElementById('jDeskripsi').value = j.deskripsi || '';
+            document.getElementById('jStatus').value = j.status;
+            document.getElementById('jDeadline').value = j.deadline || '';
+            document.getElementById('jPrioritas').value = j.prioritas;
+            document.getElementById('jChecklist').checked = j.checklist == 1;
+            document.getElementById('submitBtnText').textContent = 'Update';
+            document.getElementById('formTitle').textContent = 'Edit Laporan';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function deleteJob(id) {
-            const confirm = await Swal.fire({ title: 'Hapus data?', text: 'Data akan dihapus permanen', icon: 'warning',
-                showCancelButton: true, confirmButtonColor: '#ef4444' });
-            if (!confirm.isConfirmed) return;
-            try {
-                await apiFetch(`/jobs/${id}`, { method: 'DELETE' });
-                showToast('Data dihapus', 'success');
-                loadJobs();
-                loadDashboard();
-            } catch (e) {
-                showToast('Gagal hapus', 'error');
-            }
+        function deleteJob(id) {
+            Swal.fire({
+                title: 'Hapus data?',
+                text: 'Data akan dihapus permanen',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    let jobs = getJobs();
+                    jobs = jobs.filter(j => j.id !== id);
+                    setJobs(jobs);
+                    showToast('Data dihapus', 'success');
+                    loadJobs();
+                    loadDashboard();
+                }
+            });
         }
 
-        // filter events
+        // Filter events
         document.getElementById('jobSearch').addEventListener('input', () => { jobPage = 1;
             loadJobs(); });
         document.getElementById('filterDate').addEventListener('change', () => { jobPage = 1;
@@ -1137,53 +1181,51 @@
         document.getElementById('nextPageJobs').addEventListener('click', () => { jobPage++;
             loadJobs(); });
 
-        // Export
+        // Export (simulasi)
         document.getElementById('exportPdfJobs').addEventListener('click', () => {
-            window.open(`${API_BASE}/jobs/export/pdf`, '_blank');
+            showToast('PDF akan didownload (simulasi)', 'info');
+            window.print();
         });
         document.getElementById('exportExcelJobs').addEventListener('click', () => {
-            window.open(`${API_BASE}/jobs/export/excel`, '_blank');
+            showToast('Excel akan didownload (simulasi)', 'info');
         });
         document.getElementById('printJobs').addEventListener('click', () => {
             window.print();
         });
 
         // ================================================================
-        //  UPLOADS
+        //  UPLOADS (dengan FileReader)
         // ================================================================
-        async function loadUploads() {
-            try {
-                const res = await apiFetch('/uploads');
-                uploadsData = res.data || [];
-                const container = document.getElementById('galleryContainer');
-                if (!uploadsData.length) {
-                    container.innerHTML = '<p class="col-span-full text-brown">Belum ada gambar.</p>';
-                    return;
-                }
-                container.innerHTML = uploadsData.map(u => `
-                        <div class="card relative group" style="padding:0.5rem;">
-                            <img src="${u.path}" alt="${u.originalname}" class="w-full h-32 object-cover rounded-lg cursor-pointer gallery-img" data-path="${u.path}" />
-                            <div class="mt-1 text-xs truncate">${u.originalname}</div>
-                            <div class="text-xs text-brown">${u.kategori || '-'} | ${u.tanggal || '-'}</div>
-                            <button class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 deleteUpload" data-id="${u.id}"><i class="fas fa-times"></i></button>
-                        </div>
-                    `).join('');
-
-                document.querySelectorAll('.gallery-img').forEach(img => {
-                    img.addEventListener('click', () => {
-                        document.getElementById('lbImage').src = img.dataset.path;
-                        document.getElementById('lightbox').classList.add('active');
-                    });
-                });
-                document.querySelectorAll('.deleteUpload').forEach(btn => {
-                    btn.addEventListener('click', () => deleteUpload(btn.dataset.id));
-                });
-            } catch (e) {
-                showToast('Gagal load uploads', 'error');
+        function loadUploads() {
+            const uploads = getUploads();
+            const container = document.getElementById('galleryContainer');
+            if (!uploads.length) {
+                container.innerHTML = '<p class="col-span-full text-brown">Belum ada gambar.</p>';
+                return;
             }
+            container.innerHTML = uploads.map(u => `
+                    <div class="card relative group" style="padding:0.5rem;">
+                        <img src="${u.data}" alt="${u.originalname}" class="w-full h-32 object-cover rounded-lg cursor-pointer gallery-img" data-id="${u.id}" />
+                        <div class="mt-1 text-xs truncate">${u.originalname}</div>
+                        <div class="text-xs text-brown">${u.kategori || '-'} | ${u.tanggal || '-'}</div>
+                        <button class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 deleteUpload" data-id="${u.id}"><i class="fas fa-times"></i></button>
+                    </div>
+                `).join('');
+
+            document.querySelectorAll('.gallery-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    const upload = getUploads().find(u => u.id === parseInt(img.dataset.id));
+                    if (upload) {
+                        document.getElementById('lbImage').src = upload.data;
+                        document.getElementById('lightbox').classList.add('active');
+                    }
+                });
+            });
+            document.querySelectorAll('.deleteUpload').forEach(btn => {
+                btn.addEventListener('click', () => deleteUpload(parseInt(btn.dataset.id)));
+            });
         }
 
-        // Drag & Drop
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         dropZone.addEventListener('click', () => fileInput.click());
@@ -1196,43 +1238,59 @@
             fileInput.files = e.dataTransfer.files;
         });
 
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
+        document.getElementById('uploadBtn').addEventListener('click', () => {
             const files = fileInput.files;
             if (!files.length) { showToast('Pilih gambar dulu', 'error'); return; }
-            const formData = new FormData();
-            for (let f of files) formData.append('images', f);
-            formData.append('kategori', document.getElementById('uploadKategori').value);
-            formData.append('tanggal', document.getElementById('uploadTanggal').value);
-            formData.append('deskripsi', document.getElementById('uploadDeskripsi').value);
-            try {
-                const res = await fetch(`${API_BASE}/uploads`, {
-                    method: 'POST',
-                    body: formData
-                });
-                if (!res.ok) throw new Error(await res.text());
-                showToast('Upload berhasil', 'success');
-                fileInput.value = '';
-                document.getElementById('uploadKategori').value = '';
-                document.getElementById('uploadTanggal').value = '';
-                document.getElementById('uploadDeskripsi').value = '';
-                loadUploads();
-                loadDashboard();
-            } catch (e) {
-                showToast('Gagal upload', 'error');
+            const kategori = document.getElementById('uploadKategori').value;
+            const tanggal = document.getElementById('uploadTanggal').value;
+            const deskripsi = document.getElementById('uploadDeskripsi').value;
+
+            let uploads = getUploads();
+            let loaded = 0;
+            for (let f of files) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const newId = uploads.length ? Math.max(...uploads.map(u => u.id)) + 1 : 1;
+                    uploads.push({
+                        id: newId,
+                        originalname: f.name,
+                        data: e.target.result,
+                        kategori,
+                        tanggal,
+                        deskripsi,
+                        uploadedAt: new Date().toISOString()
+                    });
+                    loaded++;
+                    if (loaded === files.length) {
+                        setUploads(uploads);
+                        showToast(`${files.length} gambar berhasil diupload`, 'success');
+                        fileInput.value = '';
+                        document.getElementById('uploadKategori').value = '';
+                        document.getElementById('uploadTanggal').value = '';
+                        document.getElementById('uploadDeskripsi').value = '';
+                        loadUploads();
+                        loadDashboard();
+                    }
+                };
+                reader.readAsDataURL(f);
             }
         });
 
-        async function deleteUpload(id) {
-            const confirm = await Swal.fire({ title: 'Hapus gambar?', icon: 'warning', showCancelButton: true });
-            if (!confirm.isConfirmed) return;
-            try {
-                await apiFetch(`/uploads/${id}`, { method: 'DELETE' });
-                showToast('Gambar dihapus', 'success');
-                loadUploads();
-                loadDashboard();
-            } catch (e) {
-                showToast('Gagal hapus', 'error');
-            }
+        function deleteUpload(id) {
+            Swal.fire({
+                title: 'Hapus gambar?',
+                icon: 'warning',
+                showCancelButton: true
+            }).then(result => {
+                if (result.isConfirmed) {
+                    let uploads = getUploads();
+                    uploads = uploads.filter(u => u.id !== id);
+                    setUploads(uploads);
+                    showToast('Gambar dihapus', 'success');
+                    loadUploads();
+                    loadDashboard();
+                }
+            });
         }
 
         document.getElementById('closeLb').addEventListener('click', () => {
@@ -1247,22 +1305,13 @@
         // ================================================================
         const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
-        async function loadBrainstorm() {
-            try {
-                const res = await apiFetch('/brainstorm');
-                brainstormData = res.data || {};
-                renderBrainstorm();
-            } catch (e) {
-                showToast('Gagal load brainstorming', 'error');
-            }
-        }
-
-        function renderBrainstorm() {
+        function loadBrainstorm() {
+            const brain = getBrain();
             const container = document.getElementById('brainstormContainer');
             let html = '';
             for (let w = 1; w <= 4; w++) {
                 const weekKey = `minggu${w}`;
-                const weekData = brainstormData[weekKey] || [];
+                const weekData = brain[weekKey] || [];
                 html += `
                         <div class="card">
                             <h4 class="font-bold mb-2" style="color:var(--primary);">Minggu ${w}</h4>
@@ -1295,62 +1344,38 @@
             // Autosave on change
             document.querySelectorAll('.brain-input').forEach(inp => {
                 inp.addEventListener('change', () => {
+                    const brain = getBrain();
                     const week = inp.dataset.week;
                     const row = parseInt(inp.dataset.row);
                     const field = inp.dataset.field;
                     const val = inp.value;
-                    if (!brainstormData[week]) brainstormData[week] = [];
-                    if (!brainstormData[week][row]) brainstormData[week][row] = {};
-                    brainstormData[week][row][field] = val;
-                    autoSaveBrainstorm();
+                    if (!brain[week]) brain[week] = [];
+                    if (!brain[week][row]) brain[week][row] = {};
+                    brain[week][row][field] = val;
+                    setBrain(brain);
+                    // update dashboard ide count
+                    loadDashboard();
                 });
             });
         }
 
-        let brainSaveTimeout = null;
-
-        async function autoSaveBrainstorm() {
-            clearTimeout(brainSaveTimeout);
-            brainSaveTimeout = setTimeout(async () => {
-                try {
-                    await apiFetch('/brainstorm', {
-                        method: 'POST',
-                        body: JSON.stringify(brainstormData)
-                    });
-                    showToast('Brainstorming autosave', 'success');
-                } catch (e) {
-                    showToast('Gagal autosave brainstorm', 'error');
-                }
-            }, 800);
-        }
-
-        document.getElementById('saveBrainstorm').addEventListener('click', async () => {
-            try {
-                await apiFetch('/brainstorm', {
-                    method: 'POST',
-                    body: JSON.stringify(brainstormData)
-                });
-                showToast('Brainstorming disimpan', 'success');
-            } catch (e) {
-                showToast('Gagal simpan', 'error');
-            }
+        document.getElementById('saveBrainstorm').addEventListener('click', () => {
+            showToast('Brainstorming tersimpan', 'success');
         });
 
-        document.getElementById('resetBrainstorm').addEventListener('click', async () => {
-            const confirm = await Swal.fire({ title: 'Reset semua data brainstorming?', icon: 'warning',
-                showCancelButton: true });
-            if (!confirm.isConfirmed) return;
-            brainstormData = {};
-            try {
-                await apiFetch('/brainstorm', {
-                    method: 'POST',
-                    body: JSON.stringify({})
-                });
-                showToast('Data direset', 'success');
-                loadBrainstorm();
-            } catch (e) {
-                showToast('Gagal reset', 'error');
-            }
+        document.getElementById('resetBrainstorm').addEventListener('click', () => {
+            Swal.fire({
+                title: 'Reset semua data brainstorming?',
+                icon: 'warning',
+                showCancelButton: true
+            }).then(result => {
+                if (result.isConfirmed) {
+                    setBrain({});
+                    showToast('Data direset', 'success');
+                    loadBrainstorm();
+                    loadDashboard();
+                }
+            });
         });
 
         // ================================================================
@@ -1381,25 +1406,44 @@
 
         document.getElementById('logoutBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            localStorage.removeItem('wcr_user');
-            location.reload();
+            doLogout();
+        });
+
+        // ================================================================
+        //  LOGIN HANDLER
+        // ================================================================
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value.trim();
+            const role = document.getElementById('loginRole').value;
+
+            if (doLogin(username, password, role)) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                document.getElementById('userBadge').textContent = `👤 ${username} (${role})`;
+                showToast('Login berhasil!', 'success');
+                navigate('dashboard');
+            } else {
+                Swal.fire('Error', 'Username atau password salah!', 'error');
+            }
         });
 
         // ================================================================
         //  INIT
         // ================================================================
         if (checkAuth()) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
             navigate('dashboard');
-            // auto refresh setiap 30s
-            setInterval(() => {
-                if (currentPage === 'dashboard') loadDashboard();
-                if (currentPage === 'jobs') loadJobs();
-                if (currentPage === 'uploads') loadUploads();
-            }, 30000);
+        } else {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
         }
 
-        console.log('🚀 Weekly Content Report Management System loaded.');
-        console.log('📦 Built with ❤️ by Senior Full Stack Developer');
+        console.log('✅ Weekly Content Report Management System siap pakai!');
+        console.log('🔑 Login: Divisi Konten / anggiadmin');
     </script>
+
 </body>
 </html>
