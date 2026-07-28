@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weekly Content Report</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    </script>
     <style>
         /* ===== GLOBAL ===== */
         * {
@@ -697,16 +699,8 @@
                                 <option value="Lainnya">Lainnya</option>
                             </select>
                         </div>
-                        <div><label>Kategori</label>
-                            <select id="jKategori">
-                                <option value="Feed Instagram">Feed Instagram</option>
-                                <option value="Reels">Reels</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="YouTube Shorts">YouTube Shorts</option>
-                                <option value="Threads">Threads</option>
-                                <option value="Facebook">Facebook</option>
-                            </select>
-                        </div>
+                        <!-- KATEGORI: input text kosong, diisi manual oleh admin -->
+                        <div><label>Kategori</label><input type="text" id="jKategori" placeholder="Isi kategori manual" /></div>
                         <div><label>Judul Pekerjaan</label><input type="text" id="jJudul" placeholder="Judul" required /></div>
                         <div><label>Deskripsi</label><textarea id="jDeskripsi" rows="2" placeholder="Deskripsi"></textarea></div>
                         <div><label>Status</label>
@@ -856,7 +850,8 @@
             const c = document.getElementById('toastContainer');
             const t = document.createElement('div');
             t.className = `toast ${type}`;
-            t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${msg}`;
+            t.innerHTML =
+                `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${msg}`;
             c.appendChild(t);
             setTimeout(() => { t.style.opacity = '0';
                 setTimeout(() => t.remove(), 300); }, 3000);
@@ -964,29 +959,46 @@
             document.getElementById('ringProgress').style.setProperty('--pct', `${progress}%`);
             document.getElementById('ringLabel').textContent = `${progress}%`;
 
-            // Chart
-            const categories = { 'Feed Instagram': 0, 'Reels': 0, 'TikTok': 0, 'YouTube Shorts': 0, 'Threads': 0,
-                'Facebook': 0 };
-            jobs.forEach(j => { if (categories.hasOwnProperty(j.kategori)) categories[j.kategori]++; });
+            // Chart - menggunakan kategori unik dari data (karena input manual)
+            const catMap = {};
+            jobs.forEach(j => {
+                const k = j.kategori || 'Tanpa Kategori';
+                catMap[k] = (catMap[k] || 0) + 1;
+            });
+            const labels = Object.keys(catMap);
+            const values = Object.values(catMap);
+
             const ctx = document.getElementById('dashboardChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(categories),
-                    datasets: [{
-                        label: 'Jumlah',
-                        data: Object.values(categories),
-                        backgroundColor: ['#214A32', '#7A5634', '#D9B574', '#4a7a5a', '#a07a5a', '#b89a6a'],
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
-                }
-            });
+            if (labels.length) {
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Jumlah',
+                            data: values,
+                            backgroundColor: ['#214A32', '#7A5634', '#D9B574', '#4a7a5a', '#a07a5a',
+                                '#b89a6a', '#6a8a7a', '#8a6a4a'
+                            ],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
+                    }
+                });
+            } else {
+                // chart kosong
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: ['Belum ada data'], datasets: [{ label: 'Jumlah', data: [0],
+                            backgroundColor: ['#e5e7eb'] }] },
+                    options: { responsive: true, plugins: { legend: { display: false } } }
+                });
+            }
 
             // Recent activity
             const recent = jobs.slice(-5).reverse();
@@ -1028,8 +1040,8 @@
 
             let filtered = jobs.filter(j => {
                 let ok = true;
-                if (search && !j.judul.toLowerCase().includes(search) && !j.nama_staff.toLowerCase().includes(search))
-                    ok = false;
+                if (search && !j.judul.toLowerCase().includes(search) && !j.nama_staff.toLowerCase().includes(
+                    search)) ok = false;
                 if (date && j.tanggal !== date) ok = false;
                 if (status && j.status !== status) ok = false;
                 if (divisi && j.divisi !== divisi) ok = false;
@@ -1054,7 +1066,7 @@
                         <td>${j.tanggal}</td>
                         <td>${j.nama_staff}</td>
                         <td>${j.divisi}</td>
-                        <td>${j.kategori}</td>
+                        <td>${j.kategori || '-'}</td>
                         <td class="max-w-[120px] truncate" title="${j.judul}">${j.judul}</td>
                         <td><span class="badge ${j.status === 'Selesai' ? 'badge-success' : j.status === 'Proses' ? 'badge-warning' : 'badge-danger'}">${j.status}</span></td>
                         <td>${j.deadline || '-'}</td>
@@ -1082,7 +1094,7 @@
                 tanggal: document.getElementById('jTanggal').value,
                 nama_staff: document.getElementById('jStaff').value,
                 divisi: document.getElementById('jDivisi').value,
-                kategori: document.getElementById('jKategori').value,
+                kategori: document.getElementById('jKategori').value, // input manual
                 judul: document.getElementById('jJudul').value,
                 deskripsi: document.getElementById('jDeskripsi').value,
                 status: document.getElementById('jStatus').value,
@@ -1128,7 +1140,7 @@
             document.getElementById('jTanggal').value = j.tanggal;
             document.getElementById('jStaff').value = j.nama_staff;
             document.getElementById('jDivisi').value = j.divisi;
-            document.getElementById('jKategori').value = j.kategori;
+            document.getElementById('jKategori').value = j.kategori || '';
             document.getElementById('jJudul').value = j.judul;
             document.getElementById('jDeskripsi').value = j.deskripsi || '';
             document.getElementById('jStatus').value = j.status;
@@ -1353,7 +1365,6 @@
                     if (!brain[week][row]) brain[week][row] = {};
                     brain[week][row][field] = val;
                     setBrain(brain);
-                    // update dashboard ide count
                     loadDashboard();
                 });
             });
@@ -1443,6 +1454,7 @@
 
         console.log('✅ Weekly Content Report Management System siap pakai!');
         console.log('🔑 Login: Divisi Konten / anggiadmin');
+        console.log('📝 Kategori diisi manual oleh admin (input text)');
     </script>
 
 </body>
