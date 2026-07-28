@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly Content Report Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ===== GLOBAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary: #214A32;
+            --cream: #F8F4EA;
+            --brown: #7A5634;
+            --accent: #D9B574;
+            --bg: #F8F4EA;
+            --text: #1e1e2a;
+            --card: #ffffff;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark {
+            --bg: #0f0f1a;
+            --text: #e8e8f0;
+            --card: #1a1a2e;
+            --cream: #1a1a2e;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
+            min-height: 100vh;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: var(--shadow);
+        }
+        .dark .glass {
+            background: rgba(26, 26, 46, 0.75);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: all var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== BUTTON ===== */
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary:hover {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 0.6rem 1.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            padding: 0.6rem 1.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            transition: all var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--card);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+            transition: transform var(--transition);
+            overflow-y: auto;
+        }
+        .dark .sidebar {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+        .sidebar .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .dark .sidebar .logo {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+        .sidebar .logo i {
+            color: var(--accent);
+        }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all var(--transition);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--cream);
+            color: var(--primary);
+        }
+        .dark .sidebar a:hover,
+        .dark .sidebar a.active {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .sidebar a i {
+            width: 1.5rem;
+            text-align: center;
+            color: var(--brown);
+        }
+        .dark .sidebar a i {
+            color: var(--accent);
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            margin-left: 260px;
+            padding: 1.5rem 2rem;
+            min-height: 100vh;
+            transition: margin var(--transition);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .hamburger {
+                display: flex !important;
+            }
+        }
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th {
+            text-align: left;
+            padding: 0.75rem 0.5rem;
+            font-weight: 600;
+            color: var(--brown);
+            border-bottom: 2px solid var(--cream);
+        }
+        td {
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .dark td {
+            border-color: rgba(255, 255, 255, 0.04);
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .dark .badge-success {
+            background: #065f46;
+            color: #d1fae5;
+        }
+        .dark .badge-warning {
+            background: #92400e;
+            color: #fef3c7;
+        }
+        .dark .badge-danger {
+            background: #991b1b;
+            color: #fee2e2;
+        }
+        .dark .badge-info {
+            background: #1e40af;
+            color: #dbeafe;
+        }
+
+        /* ===== FORM ===== */
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            border: 1.5px solid #e5e7eb;
+            background: var(--bg);
+            color: var(--text);
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .dark input,
+        .dark select,
+        .dark textarea {
+            border-color: #2d2d44;
+            background: #1a1a2e;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 181, 116, 0.2);
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--brown);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .dark label {
+            color: var(--accent);
+        }
+
+        /* ===== UPLOAD DROP ===== */
+        .drop-zone {
+            border: 2px dashed var(--accent);
+            border-radius: var(--radius);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: rgba(217, 181, 116, 0.05);
+        }
+        .drop-zone.dragover {
+            background: rgba(217, 181, 116, 0.15);
+            border-color: var(--primary);
+        }
+        .drop-zone i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+        .lightbox .close-lb {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .lightbox .close-lb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== BRAINSTORM TABLE ===== */
+        .brain-cell {
+            min-width: 80px;
+            padding: 0.4rem 0.3rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.8rem;
+            width: 100%;
+        }
+        .dark .brain-cell {
+            border-color: #2d2d44;
+        }
+        .brain-cell:focus {
+            outline: 2px solid var(--accent);
+            border-color: transparent;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .toast {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            background: var(--card);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--accent);
+            animation: slideUp 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            min-width: 280px;
+        }
+        .toast.success {
+            border-left-color: #22c55e;
+        }
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+        .toast.info {
+            border-left-color: #3b82f6;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== LOADING ===== */
+        .loader {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(33, 74, 50, 0.15);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== MISC ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-widget {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1rem 1.2rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+            transition: all var(--transition);
+        }
+        .stat-widget:hover {
+            transform: translateY(-3px);
+        }
+        .stat-widget .num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .dark .stat-widget .num {
+            color: var(--accent);
+        }
+        .stat-widget .label {
+            font-size: 0.8rem;
+            color: var(--brown);
+            font-weight: 500;
+        }
+
+        /* progress ring */
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) var(--pct, 0%), #e5e7eb var(--pct, 0%));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .progress-ring .inner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        .dark .progress-ring {
+            background: conic-gradient(var(--accent) var(--pct, 0%), #2d2d44 var(--pct, 0%));
+        }
+        .dark .progress-ring .inner {
+            background: var(--card);
+            color: var(--accent);
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 640px) {
+            .main {
+                padding: 0.75rem;
+            }
+            .card {
+                padding: 1rem;
+            }
+            .stat-widget .num {
+                font-size: 1.4rem;
+            }
+            .sidebar {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-edit"></i>
+            <span>ContentReport</span>
+        </div>
+        <nav>
+            <a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="#" data-page="jobs"><i class="fas fa-clipboard-list"></i> Laporan Pekerjaan</a>
+            <a href="#" data-page="uploads"><i class="fas fa-images"></i> Bukti Pekerjaan</a>
+            <a href="#" data-page="brainstorm"><i class="fas fa-lightbulb"></i> Brainstorming</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+        <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.05);">
+            <button id="darkToggle" class="btn-outline" style="width:100%;justify-content:center;font-size:0.8rem;">
+                <i class="fas fa-moon"></i> <span id="darkLabel">Dark Mode</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main">
+
+        <!-- HAMBURGER -->
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+            <h1 class="text-2xl font-bold" style="color:var(--primary);" id="pageTitle">Dashboard</h1>
+            <span style="margin-left:auto;font-size:0.85rem;color:var(--brown);" id="userBadge">👤 Admin</span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: DASHBOARD -->
+        <!-- ============================================================ -->
+        <div class="page active" id="page-dashboard">
+
+            <!-- Stat Widgets -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+                <div class="stat-widget"><span class="label">Jobdesk Mingguan</span><div class="num" id="statWeekly">0</div></div>
+                <div class="stat-widget"><span class="label">Jobdesk Bulanan</span><div class="num" id="statMonthly">0</div></div>
+                <div class="stat-widget"><span class="label">Progress</span><div class="num" id="statProgress">0%</div></div>
+                <div class="stat-widget"><span class="label">Upload Foto</span><div class="num" id="statUploads">0</div></div>
+                <div class="stat-widget"><span class="label">Ide Konten</span><div class="num" id="statIdeas">0</div></div>
+                <div class="stat-widget"><span class="label">Selesai</span><div class="num" id="statDone">0</div></div>
+                <div class="stat-widget"><span class="label">Pending</span><div class="num" id="statPending">0</div></div>
+            </div>
+
+            <!-- Chart + Progress -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                <div class="card lg:col-span-2">
+                    <h3 class="font-semibold mb-3"><i class="fas fa-chart-bar text-accent"></i> Statistik Pekerjaan</h3>
+                    <canvas id="dashboardChart" height="200"></canvas>
+                </div>
+                <div class="card flex flex-col items-center justify-center">
+                    <h3 class="font-semibold mb-2">Progress Bulanan</h3>
+                    <div class="progress-ring" id="ringProgress" style="--pct:0%;">
+                        <div class="inner" id="ringLabel">0%</div>
+                    </div>
+                    <p class="text-sm text-brown mt-2">dari target bulan ini</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card mb-4">
+                <h3 class="font-semibold mb-3"><i class="fas fa-clock text-accent"></i> Recent Activity</h3>
+                <div id="recentActivity" class="space-y-2 text-sm">
+                    <p class="text-brown">Belum ada aktivitas.</p>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="card">
+                <h3 class="font-semibold mb-3"><i class="fas fa-calendar-alt text-accent"></i> Aktivitas Mingguan</h3>
+                <div id="weeklyTimeline" class="flex flex-wrap gap-2">
+                    <span class="text-brown">Belum ada data.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: LAPORAN PEKERJAAN (JOBS) -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-jobs">
+
+            <!-- Form -->
+            <div class="card mb-6" id="jobFormCard">
+                <h3 class="font-semibold mb-3"><i class="fas fa-plus-circle text-accent"></i> <span id="formTitle">Tambah Laporan</span></h3>
+                <form id="jobForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <input type="hidden" id="jobId" value="" />
+                    <div><label>Tanggal</label><input type="date" id="jTanggal" required /></div>
+                    <div><label>Nama Staff</label><input type="text" id="jStaff" placeholder="Nama" required /></div>
+                    <div><label>Divisi</label>
+                        <select id="jDivisi"><option value="Konten">Konten</option><option value="Desain">Desain</option><option value="Video">Video</option><option value="Lainnya">Lainnya</option></select>
+                    </div>
+                    <div><label>Kategori</label>
+                        <select id="jKategori"><option value="Feed Instagram">Feed Instagram</option><option value="Reels">Reels</option><option value="TikTok">TikTok</option><option value="YouTube Shorts">YouTube Shorts</option><option value="Threads">Threads</option><option value="Facebook">Facebook</option></select>
+                    </div>
+                    <div><label>Judul Pekerjaan</label><input type="text" id="jJudul" placeholder="Judul" required /></div>
+                    <div><label>Deskripsi</label><textarea id="jDeskripsi" rows="2" placeholder="Deskripsi"></textarea></div>
+                    <div><label>Status</label>
+                        <select id="jStatus"><option value="Selesai">Selesai</option><option value="Proses" selected>Proses</option><option value="Pending">Pending</option></select>
+                    </div>
+                    <div><label>Deadline</label><input type="date" id="jDeadline" /></div>
+                    <div><label>Prioritas</label>
+                        <select id="jPrioritas"><option value="Rendah">Rendah</option><option value="Sedang" selected>Sedang</option><option value="Tinggi">Tinggi</option></select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <label class="flex items-center gap-1"><input type="checkbox" id="jChecklist" /> Checklist Selesai</label>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3 flex gap-2 flex-wrap">
+                        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span id="submitBtnText">Simpan</span></button>
+                        <button type="reset" class="btn-outline" id="resetJobBtn"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Filter & Search -->
+            <div class="flex flex-wrap gap-3 mb-4 items-end">
+                <div><label>Search</label><input type="text" id="jobSearch" placeholder="Cari..." class="w-40" /></div>
+                <div><label>Filter Tanggal</label><input type="date" id="filterDate" class="w-36" /></div>
+                <div><label>Status</label>
+                    <select id="filterStatus" class="w-32"><option value="">Semua</option><option value="Selesai">Selesai</option><option value="Proses">Proses</option><option value="Pending">Pending</option></select>
+                </div>
+                <div><label>Divisi</label>
+                    <select id="filterDivisi" class="w-32"><option value="">Semua</option><option value="Konten">Konten</option><option value="Desain">Desain</option><option value="Video">Video</option><option value="Lainnya">Lainnya</option></select>
+                </div>
+                <div><button id="clearFilters" class="btn-outline text-sm"><i class="fas fa-times"></i> Reset Filter</button></div>
+                <div style="margin-left:auto;">
+                    <button id="exportPdfJobs" class="btn-accent text-sm"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button id="exportExcelJobs" class="btn-accent text-sm"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button id="printJobs" class="btn-accent text-sm"><i class="fas fa-print"></i> Print</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Tanggal</th><th>Staff</th><th>Divisi</th><th>Kategori</th><th>Judul</th><th>Status</th><th>Deadline</th><th>Prioritas</th><th>Progress</th><th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTableBody">
+                        <tr><td colspan="11" class="text-center text-brown">Loading...</td></tr>
+                    </tbody>
+                </table>
+                <div class="flex justify-between items-center mt-3 text-sm">
+                    <span id="jobCount">0 data</span>
+                    <div class="flex gap-2">
+                        <button id="prevPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-left"></i></button>
+                        <span id="pageInfoJobs" class="px-2">Halaman 1</span>
+                        <button id="nextPageJobs" class="btn-outline text-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: BUKTI PEKERJAAN (UPLOADS) -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-uploads">
+
+            <div class="card mb-4">
+                <h3 class="font-semibold mb-3"><i class="fas fa-upload text-accent"></i> Upload Gambar</h3>
+                <div class="drop-zone" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="font-medium">Drag & Drop gambar di sini, atau klik untuk memilih</p>
+                    <p class="text-sm text-brown">Multiple upload didukung</p>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" />
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                    <div><label>Kategori</label><input type="text" id="uploadKategori" placeholder="Kategori" /></div>
+                    <div><label>Tanggal</label><input type="date" id="uploadTanggal" /></div>
+                    <div><label>Deskripsi</label><input type="text" id="uploadDeskripsi" placeholder="Deskripsi" /></div>
+                </div>
+                <button id="uploadBtn" class="btn-primary mt-2"><i class="fas fa-upload"></i> Upload</button>
+            </div>
+
+            <!-- Gallery -->
+            <div class="card">
+                <h3 class="font-semibold mb-3"><i class="fas fa-images text-accent"></i> Galeri</h3>
+                <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    <p class="col-span-full text-brown">Belum ada gambar.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: BRAINSTORMING -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-brainstorm">
+
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="font-semibold"><i class="fas fa-lightbulb text-accent"></i> Ide Konten Bulanan</h3>
+                <div class="flex gap-2">
+                    <button id="saveBrainstorm" class="btn-primary text-sm"><i class="fas fa-save"></i> Simpan Semua</button>
+                    <button id="resetBrainstorm" class="btn-outline text-sm"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+            </div>
+
+            <div id="brainstormContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- 4 minggu akan di-render oleh JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox">
+        <span class="close-lb" id="closeLb">&times;</span>
+        <img id="lbImage" src="" alt="preview" />
+    </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        //  GLOBALS
+        // ================================================================
+        const API_BASE = '/api';
+        let currentUser = null;
+        let currentPage = 'dashboard';
+        let jobsData = [];
+        let uploadsData = [];
+        let brainstormData = {};
+        let chartInstance = null;
+        let jobPage = 1;
+        const JOB_LIMIT = 10;
+
+        // ================================================================
+        //  TOAST
+        // ================================================================
+        function showToast(msg, type = 'info') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${msg}`;
+            c.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0';
+                setTimeout(() => t.remove(), 300); }, 3000);
+        }
+
+        // ================================================================
+        //  LOADING
+        // ================================================================
+        function showLoading(show) {
+            // simple spinner overlay
+        }
+
+        // ================================================================
+        //  AUTH
+        // ================================================================
+        function checkAuth() {
+            const u = localStorage.getItem('wcr_user');
+            if (!u) {
+                // redirect ke login
+                document.body.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);">
+                        <div class="card" style="max-width:400px;width:100%;">
+                            <h2 class="text-2xl font-bold mb-4" style="color:var(--primary);"><i class="fas fa-edit text-accent"></i> Login</h2>
+                            <form id="loginForm">
+                                <div class="mb-3"><label>Username</label><input type="text" id="loginUser" value="admin" /></div>
+                                <div class="mb-3"><label>Password</label><input type="password" id="loginPass" value="admin123" /></div>
+                                <div class="mb-3"><label>Role</label>
+                                    <select id="loginRole"><option value="Admin">Admin</option><option value="Content Creator">Content Creator</option></select>
+                                </div>
+                                <button type="submit" class="btn-primary w-full justify-center"><i class="fas fa-sign-in-alt"></i> Login</button>
+                            </form>
+                            <p class="text-xs text-brown mt-3">Default: admin/admin123</p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('loginUser').value;
+                    const password = document.getElementById('loginPass').value;
+                    const role = document.getElementById('loginRole').value;
+                    // Simulate login
+                    const user = { username, role };
+                    localStorage.setItem('wcr_user', JSON.stringify(user));
+                    currentUser = user;
+                    document.getElementById('userBadge').textContent = `👤 ${user.username} (${user.role})`;
+                    showToast('Login berhasil!', 'success');
+                    // reload page
+                    location.reload();
+                });
+                return false;
+            }
+            currentUser = JSON.parse(u);
+            document.getElementById('userBadge').textContent = `👤 ${currentUser.username} (${currentUser.role})`;
+            return true;
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${page}`).classList.add('active');
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`.sidebar a[data-page="${page}"]`)?.classList.add('active');
+            currentPage = page;
+            const titles = { dashboard: 'Dashboard', jobs: 'Laporan Pekerjaan', uploads: 'Bukti Pekerjaan',
+                brainstorm: 'Brainstorming' };
+            document.getElementById('pageTitle').textContent = titles[page] || page;
+            // close sidebar mobile
+            document.getElementById('sidebar').classList.remove('open');
+            // load data
+            if (page === 'dashboard') loadDashboard();
+            if (page === 'jobs') loadJobs();
+            if (page === 'uploads') loadUploads();
+            if (page === 'brainstorm') loadBrainstorm();
+        }
+
+        // ================================================================
+        //  API HELPERS
+        // ================================================================
+        async function apiFetch(endpoint, opts = {}) {
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                ...opts,
+                headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        // ================================================================
+        //  DASHBOARD
+        // ================================================================
+        async function loadDashboard() {
+            try {
+                const data = await apiFetch('/dashboard');
+                document.getElementById('statWeekly').textContent = data.weeklyJobs || 0;
+                document.getElementById('statMonthly').textContent = data.monthlyJobs || 0;
+                document.getElementById('statProgress').textContent = `${data.progress || 0}%`;
+                document.getElementById('statUploads').textContent = data.totalUploads || 0;
+                document.getElementById('statIdeas').textContent = data.totalIdeas || 0;
+                document.getElementById('statDone').textContent = data.doneJobs || 0;
+                document.getElementById('statPending').textContent = data.pendingJobs || 0;
+
+                // ring
+                const pct = Math.min(data.progress || 0, 100);
+                document.getElementById('ringProgress').style.setProperty('--pct', `${pct}%`);
+                document.getElementById('ringLabel').textContent = `${pct}%`;
+
+                // chart
+                const ctx = document.getElementById('dashboardChart').getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                const labels = ['Feed IG', 'Reels', 'TikTok', 'YTS', 'Threads', 'FB'];
+                const values = [
+                    data.categories?.FeedInstagram || 0,
+                    data.categories?.Reels || 0,
+                    data.categories?.TikTok || 0,
+                    data.categories?.YouTubeShorts || 0,
+                    data.categories?.Threads || 0,
+                    data.categories?.Facebook || 0
+                ];
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Jumlah',
+                            data: values,
+                            backgroundColor: ['#214A32', '#7A5634', '#D9B574', '#4a7a5a', '#a07a5a', '#b89a6a'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
+                    }
+                });
+
+                // recent activity
+                const act = document.getElementById('recentActivity');
+                if (data.recent && data.recent.length) {
+                    act.innerHTML = data.recent.map(r =>
+                        `<div class="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800"><span>${r.msg}</span><span class="text-xs text-brown">${r.time}</span></div>`
+                    ).join('');
+                } else {
+                    act.innerHTML = '<p class="text-brown">Belum ada aktivitas.</p>';
+                }
+
+                // weekly timeline
+                const tl = document.getElementById('weeklyTimeline');
+                if (data.weeklyTimeline && data.weeklyTimeline.length) {
+                    tl.innerHTML = data.weeklyTimeline.map(w =>
+                        `<span class="badge badge-info">${w.day}: ${w.count} job</span>`
+                    ).join('');
+                } else {
+                    tl.innerHTML = '<span class="text-brown">Belum ada data.</span>';
+                }
+
+            } catch (e) {
+                console.error(e);
+                showToast('Gagal load dashboard', 'error');
+            }
+        }
+
+        // ================================================================
+        //  JOBS (CRUD)
+        // ================================================================
+        async function loadJobs() {
+            try {
+                const search = document.getElementById('jobSearch').value;
+                const date = document.getElementById('filterDate').value;
+                const status = document.getElementById('filterStatus').value;
+                const divisi = document.getElementById('filterDivisi').value;
+                const q = new URLSearchParams({ page: jobPage, limit: JOB_LIMIT, search, date, status, divisi });
+                const res = await apiFetch(`/jobs?${q}`);
+                jobsData = res.data || [];
+                const total = res.total || 0;
+                document.getElementById('jobCount').textContent = `${total} data`;
+                document.getElementById('pageInfoJobs').textContent = `Halaman ${jobPage}`;
+
+                const tbody = document.getElementById('jobsTableBody');
+                if (!jobsData.length) {
+                    tbody.innerHTML = `<tr><td colspan="11" class="text-center text-brown">Tidak ada data</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = jobsData.map((j, i) => `
+                        <tr>
+                            <td>${(jobPage-1)*JOB_LIMIT + i + 1}</td>
+                            <td>${j.tanggal}</td>
+                            <td>${j.nama_staff}</td>
+                            <td>${j.divisi}</td>
+                            <td>${j.kategori}</td>
+                            <td class="max-w-[120px] truncate" title="${j.judul}">${j.judul}</td>
+                            <td><span class="badge ${j.status === 'Selesai' ? 'badge-success' : j.status === 'Proses' ? 'badge-warning' : 'badge-danger'}">${j.status}</span></td>
+                            <td>${j.deadline || '-'}</td>
+                            <td><span class="badge ${j.prioritas === 'Tinggi' ? 'badge-danger' : j.prioritas === 'Sedang' ? 'badge-warning' : 'badge-info'}">${j.prioritas}</span></td>
+                            <td>${j.progress || 0}%</td>
+                            <td>
+                                <button class="text-primary editJob" data-id="${j.id}"><i class="fas fa-edit"></i></button>
+                                <button class="text-red-500 deleteJob" data-id="${j.id}"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                // event listeners
+                document.querySelectorAll('.editJob').forEach(btn => {
+                    btn.addEventListener('click', () => editJob(btn.dataset.id));
+                });
+                document.querySelectorAll('.deleteJob').forEach(btn => {
+                    btn.addEventListener('click', () => deleteJob(btn.dataset.id));
+                });
+
+            } catch (e) {
+                console.error(e);
+                showToast('Gagal load jobs', 'error');
+            }
+        }
+
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('jobId').value;
+            const data = {
+                tanggal: document.getElementById('jTanggal').value,
+                nama_staff: document.getElementById('jStaff').value,
+                divisi: document.getElementById('jDivisi').value,
+                kategori: document.getElementById('jKategori').value,
+                judul: document.getElementById('jJudul').value,
+                deskripsi: document.getElementById('jDeskripsi').value,
+                status: document.getElementById('jStatus').value,
+                deadline: document.getElementById('jDeadline').value,
+                prioritas: document.getElementById('jPrioritas').value,
+                checklist: document.getElementById('jChecklist').checked ? 1 : 0
+            };
+            try {
+                if (id) {
+                    await apiFetch(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+                    showToast('Data diperbarui', 'success');
+                } else {
+                    await apiFetch('/jobs', { method: 'POST', body: JSON.stringify(data) });
+                    showToast('Data disimpan', 'success');
+                }
+                document.getElementById('jobForm').reset();
+                document.getElementById('jobId').value = '';
+                document.getElementById('submitBtnText').textContent = 'Simpan';
+                document.getElementById('formTitle').textContent = 'Tambah Laporan';
+                loadJobs();
+                loadDashboard();
+            } catch (e) {
+                showToast('Gagal simpan', 'error');
+            }
+        });
+
+        document.getElementById('resetJobBtn').addEventListener('click', () => {
+            document.getElementById('jobId').value = '';
+            document.getElementById('submitBtnText').textContent = 'Simpan';
+            document.getElementById('formTitle').textContent = 'Tambah Laporan';
+            document.getElementById('jobForm').reset();
+        });
+
+        async function editJob(id) {
+            try {
+                const res = await apiFetch(`/jobs/${id}`);
+                const j = res.data;
+                document.getElementById('jobId').value = j.id;
+                document.getElementById('jTanggal').value = j.tanggal;
+                document.getElementById('jStaff').value = j.nama_staff;
+                document.getElementById('jDivisi').value = j.divisi;
+                document.getElementById('jKategori').value = j.kategori;
+                document.getElementById('jJudul').value = j.judul;
+                document.getElementById('jDeskripsi').value = j.deskripsi || '';
+                document.getElementById('jStatus').value = j.status;
+                document.getElementById('jDeadline').value = j.deadline || '';
+                document.getElementById('jPrioritas').value = j.prioritas;
+                document.getElementById('jChecklist').checked = j.checklist == 1;
+                document.getElementById('submitBtnText').textContent = 'Update';
+                document.getElementById('formTitle').textContent = 'Edit Laporan';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (e) {
+                showToast('Gagal ambil data', 'error');
+            }
+        }
+
+        async function deleteJob(id) {
+            const confirm = await Swal.fire({ title: 'Hapus data?', text: 'Data akan dihapus permanen', icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#ef4444' });
+            if (!confirm.isConfirmed) return;
+            try {
+                await apiFetch(`/jobs/${id}`, { method: 'DELETE' });
+                showToast('Data dihapus', 'success');
+                loadJobs();
+                loadDashboard();
+            } catch (e) {
+                showToast('Gagal hapus', 'error');
+            }
+        }
+
+        // filter events
+        document.getElementById('jobSearch').addEventListener('input', () => { jobPage = 1;
+            loadJobs(); });
+        document.getElementById('filterDate').addEventListener('change', () => { jobPage = 1;
+            loadJobs(); });
+        document.getElementById('filterStatus').addEventListener('change', () => { jobPage = 1;
+            loadJobs(); });
+        document.getElementById('filterDivisi').addEventListener('change', () => { jobPage = 1;
+            loadJobs(); });
+        document.getElementById('clearFilters').addEventListener('click', () => {
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('filterDate').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterDivisi').value = '';
+            jobPage = 1;
+            loadJobs();
+        });
+        document.getElementById('prevPageJobs').addEventListener('click', () => { if (jobPage > 1) { jobPage--;
+                loadJobs(); } });
+        document.getElementById('nextPageJobs').addEventListener('click', () => { jobPage++;
+            loadJobs(); });
+
+        // Export
+        document.getElementById('exportPdfJobs').addEventListener('click', () => {
+            window.open(`${API_BASE}/jobs/export/pdf`, '_blank');
+        });
+        document.getElementById('exportExcelJobs').addEventListener('click', () => {
+            window.open(`${API_BASE}/jobs/export/excel`, '_blank');
+        });
+        document.getElementById('printJobs').addEventListener('click', () => {
+            window.print();
+        });
+
+        // ================================================================
+        //  UPLOADS
+        // ================================================================
+        async function loadUploads() {
+            try {
+                const res = await apiFetch('/uploads');
+                uploadsData = res.data || [];
+                const container = document.getElementById('galleryContainer');
+                if (!uploadsData.length) {
+                    container.innerHTML = '<p class="col-span-full text-brown">Belum ada gambar.</p>';
+                    return;
+                }
+                container.innerHTML = uploadsData.map(u => `
+                        <div class="card relative group" style="padding:0.5rem;">
+                            <img src="${u.path}" alt="${u.originalname}" class="w-full h-32 object-cover rounded-lg cursor-pointer gallery-img" data-path="${u.path}" />
+                            <div class="mt-1 text-xs truncate">${u.originalname}</div>
+                            <div class="text-xs text-brown">${u.kategori || '-'} | ${u.tanggal || '-'}</div>
+                            <button class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 deleteUpload" data-id="${u.id}"><i class="fas fa-times"></i></button>
+                        </div>
+                    `).join('');
+
+                document.querySelectorAll('.gallery-img').forEach(img => {
+                    img.addEventListener('click', () => {
+                        document.getElementById('lbImage').src = img.dataset.path;
+                        document.getElementById('lightbox').classList.add('active');
+                    });
+                });
+                document.querySelectorAll('.deleteUpload').forEach(btn => {
+                    btn.addEventListener('click', () => deleteUpload(btn.dataset.id));
+                });
+            } catch (e) {
+                showToast('Gagal load uploads', 'error');
+            }
+        }
+
+        // Drag & Drop
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault();
+            dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+        });
+
+        document.getElementById('uploadBtn').addEventListener('click', async () => {
+            const files = fileInput.files;
+            if (!files.length) { showToast('Pilih gambar dulu', 'error'); return; }
+            const formData = new FormData();
+            for (let f of files) formData.append('images', f);
+            formData.append('kategori', document.getElementById('uploadKategori').value);
+            formData.append('tanggal', document.getElementById('uploadTanggal').value);
+            formData.append('deskripsi', document.getElementById('uploadDeskripsi').value);
+            try {
+                const res = await fetch(`${API_BASE}/uploads`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res.ok) throw new Error(await res.text());
+                showToast('Upload berhasil', 'success');
+                fileInput.value = '';
+                document.getElementById('uploadKategori').value = '';
+                document.getElementById('uploadTanggal').value = '';
+                document.getElementById('uploadDeskripsi').value = '';
+                loadUploads();
+                loadDashboard();
+            } catch (e) {
+                showToast('Gagal upload', 'error');
+            }
+        });
+
+        async function deleteUpload(id) {
+            const confirm = await Swal.fire({ title: 'Hapus gambar?', icon: 'warning', showCancelButton: true });
+            if (!confirm.isConfirmed) return;
+            try {
+                await apiFetch(`/uploads/${id}`, { method: 'DELETE' });
+                showToast('Gambar dihapus', 'success');
+                loadUploads();
+                loadDashboard();
+            } catch (e) {
+                showToast('Gagal hapus', 'error');
+            }
+        }
+
+        document.getElementById('closeLb').addEventListener('click', () => {
+            document.getElementById('lightbox').classList.remove('active');
+        });
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('lightbox').classList.remove('active');
+        });
+
+        // ================================================================
+        //  BRAINSTORMING
+        // ================================================================
+        const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
+        async function loadBrainstorm() {
+            try {
+                const res = await apiFetch('/brainstorm');
+                brainstormData = res.data || {};
+                renderBrainstorm();
+            } catch (e) {
+                showToast('Gagal load brainstorming', 'error');
+            }
+        }
+
+        function renderBrainstorm() {
+            const container = document.getElementById('brainstormContainer');
+            let html = '';
+            for (let w = 1; w <= 4; w++) {
+                const weekKey = `minggu${w}`;
+                const weekData = brainstormData[weekKey] || [];
+                html += `
+                        <div class="card">
+                            <h4 class="font-bold mb-2" style="color:var(--primary);">Minggu ${w}</h4>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr><th>Hari</th><th>Tanggal</th><th>Platform</th><th>Kategori</th><th>Judul</th><th>Konsep</th><th>Status</th></tr>
+                                    </thead>
+                                    <tbody>
+                                `;
+                for (let d = 0; d < 7; d++) {
+                    const row = weekData[d] || {};
+                    const dayName = DAYS[d];
+                    html += `
+                            <tr>
+                                <td><input class="brain-cell" value="${dayName}" readonly style="font-weight:600;" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="tanggal" value="${row.tanggal || ''}" placeholder="YYYY-MM-DD" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="platform" value="${row.platform || ''}" placeholder="Platform" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="kategori" value="${row.kategori || ''}" placeholder="Kategori" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="judul" value="${row.judul || ''}" placeholder="Judul" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="konsep" value="${row.konsep || ''}" placeholder="Konsep" /></td>
+                                <td><input class="brain-cell brain-input" data-week="${weekKey}" data-row="${d}" data-field="status" value="${row.status || ''}" placeholder="Status" /></td>
+                            </tr>
+                        `;
+                }
+                html += `</tbody></table></div></div>`;
+            }
+            container.innerHTML = html;
+
+            // Autosave on change
+            document.querySelectorAll('.brain-input').forEach(inp => {
+                inp.addEventListener('change', () => {
+                    const week = inp.dataset.week;
+                    const row = parseInt(inp.dataset.row);
+                    const field = inp.dataset.field;
+                    const val = inp.value;
+                    if (!brainstormData[week]) brainstormData[week] = [];
+                    if (!brainstormData[week][row]) brainstormData[week][row] = {};
+                    brainstormData[week][row][field] = val;
+                    autoSaveBrainstorm();
+                });
+            });
+        }
+
+        let brainSaveTimeout = null;
+
+        async function autoSaveBrainstorm() {
+            clearTimeout(brainSaveTimeout);
+            brainSaveTimeout = setTimeout(async () => {
+                try {
+                    await apiFetch('/brainstorm', {
+                        method: 'POST',
+                        body: JSON.stringify(brainstormData)
+                    });
+                    showToast('Brainstorming autosave', 'success');
+                } catch (e) {
+                    showToast('Gagal autosave brainstorm', 'error');
+                }
+            }, 800);
+        }
+
+        document.getElementById('saveBrainstorm').addEventListener('click', async () => {
+            try {
+                await apiFetch('/brainstorm', {
+                    method: 'POST',
+                    body: JSON.stringify(brainstormData)
+                });
+                showToast('Brainstorming disimpan', 'success');
+            } catch (e) {
+                showToast('Gagal simpan', 'error');
+            }
+        });
+
+        document.getElementById('resetBrainstorm').addEventListener('click', async () => {
+            const confirm = await Swal.fire({ title: 'Reset semua data brainstorming?', icon: 'warning',
+                showCancelButton: true });
+            if (!confirm.isConfirmed) return;
+            brainstormData = {};
+            try {
+                await apiFetch('/brainstorm', {
+                    method: 'POST',
+                    body: JSON.stringify({})
+                });
+                showToast('Data direset', 'success');
+                loadBrainstorm();
+            } catch (e) {
+                showToast('Gagal reset', 'error');
+            }
+        });
+
+        // ================================================================
+        //  DARK MODE
+        // ================================================================
+        let darkMode = localStorage.getItem('wcr_dark') === 'true';
+        if (darkMode) document.documentElement.classList.add('dark');
+        document.getElementById('darkToggle').addEventListener('click', () => {
+            darkMode = !darkMode;
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('wcr_dark', darkMode);
+            document.getElementById('darkLabel').textContent = darkMode ? 'Light Mode' : 'Dark Mode';
+        });
+        document.getElementById('darkLabel').textContent = darkMode ? 'Light Mode' : 'Dark Mode';
+
+        // ================================================================
+        //  SIDEBAR / NAV
+        // ================================================================
+        document.querySelectorAll('.sidebar a[data-page]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigate(a.dataset.page);
+            });
+        });
+        document.getElementById('hamburgerBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('wcr_user');
+            location.reload();
+        });
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        if (checkAuth()) {
+            navigate('dashboard');
+            // auto refresh setiap 30s
+            setInterval(() => {
+                if (currentPage === 'dashboard') loadDashboard();
+                if (currentPage === 'jobs') loadJobs();
+                if (currentPage === 'uploads') loadUploads();
+            }, 30000);
+        }
+
+        console.log('🚀 Weekly Content Report Management System loaded.');
+        console.log('📦 Built with ❤️ by Senior Full Stack Developer');
+    </script>
+</body>
+</html>
